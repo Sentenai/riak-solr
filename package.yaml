@@ -1,0 +1,21 @@
+name: riak-solr
+version: 0.1.0.0
+
+ghc-options: -Wall
+
+dependencies:
+  - base
+
+library:
+  source-dirs: src
+  dependencies:
+    - riak
+    - solr-query
+
+tests:
+  spec:
+    main: Spec.hs
+    source-dirs: test
+    dependencies:
+      - riak-solr
+      - hspec
