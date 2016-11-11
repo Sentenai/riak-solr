@@ -3,14 +3,24 @@ version: 0.1.0.0
 
 ghc-options: -Wall
 
+default-extensions:
+  - InstanceSigs
+  - LambdaCase
+  - MultiParamTypeClasses
+  - OverloadedStrings
+
 dependencies:
   - base
 
 library:
   source-dirs: src
   dependencies:
+    - bytestring
+    - containers
     - riak
+    - riak-protobuf
     - solr-query
+    - text
 
 tests:
   spec:
