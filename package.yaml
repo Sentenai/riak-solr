@@ -17,6 +17,7 @@ library:
   dependencies:
     - bytestring
     - containers
+    - protocol-buffers
     - riak
     - riak-protobuf
     - solr-query
