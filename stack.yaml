@@ -6,7 +6,10 @@ packages:
       git: git@github.com:Sentenai/solr-query
       commit: '8858994'
     extra-dep: true
+  - location:
+      git: git@github.com:mitchellwrosen/riak-haskell-client
+      commit: 'e5bdf1a'
+    extra-dep: true
 
 extra-deps:
-  - riak-1.1.1.0
   - riak-protobuf-0.22.0.0

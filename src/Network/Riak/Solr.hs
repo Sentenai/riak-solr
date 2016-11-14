@@ -18,9 +18,11 @@ import Data.Semigroup
 import Data.Sequence (Seq)
 import Data.Text (Text)
 import Data.Word
+import Network.Riak.Connection (exchange)
 import Network.Riak.Protocol.SearchQueryRequest
   (SearchQueryRequest(SearchQueryRequest))
-import Network.Riak.Protocol.SearchQueryResponse (SearchQueryResponse)
+import Network.Riak.Types (Connection)
+import Network.Riak.Types.Internal (Index, SearchResult)
 import Prelude hiding (filter)
 import Solr.Param.Internal
 import Solr.Expr.Class
@@ -30,10 +32,8 @@ import Solr.Query.Class
 import qualified Data.Text.Encoding as Text (encodeUtf8)
 import qualified Data.Text.Lazy as LText (Text)
 import qualified Data.Text.Lazy.Encoding as LText (encodeUtf8)
-import qualified Network.Riak.Connection as Riak
 import qualified Network.Riak.Protocol.SearchQueryRequest as Req
-import qualified Network.Riak.Types as Riak
-import qualified Network.Riak.Types.Internal as Riak
+import qualified Network.Riak.Response as Resp (search)
 
 data SolrQueryOpts = SolrQueryOpts
   { rows    :: Option (Sum Word32)
@@ -68,9 +68,9 @@ setStart :: Int -> SolrQueryOpts
 setStart n = mempty { start = pure (pure (fromIntegral n)) }
 
 search
-  :: Riak.Connection -> Riak.Index -> [Param SolrQuery] -> SolrQuery SolrExpr
-  -> IO SearchQueryResponse
-search conn index params query = Riak.exchange conn request
+  :: Connection -> Index -> [Param SolrQuery] -> SolrQuery SolrExpr
+  -> IO SearchResult
+search conn index params query = Resp.search <$> exchange conn request
   where
     request :: SearchQueryRequest
     request = construct (foldMap mkOpt params)
