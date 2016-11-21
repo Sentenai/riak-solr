@@ -1,0 +1,2 @@
+- Add version bounds to .cabal file
+- Remove dependency on custom riak snapshot (waiting on upstream merge & release)

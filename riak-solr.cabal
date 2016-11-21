@@ -4,9 +4,23 @@
 
 name:           riak-solr
 version:        0.1.0.0
+synopsis:       solr-query integration for riak
+description:    solr-query integration for riak. This is intended to replace the usage of
+                searchRaw from Network.Riak.Search.
+category:       Network
+homepage:       https://github.com/Sentenai/riak-solr#readme
+bug-reports:    https://github.com/Sentenai/riak-solr/issues
+author:         Mitchell Rosen
+maintainer:     Mitchell Rosen
+copyright:      2016 Sentenai, Inc.
+license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
 cabal-version:  >= 1.10
+
+source-repository head
+  type: git
+  location: https://github.com/Sentenai/riak-solr
 
 library
   hs-source-dirs:

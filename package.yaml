@@ -1,5 +1,15 @@
 name: riak-solr
 version: 0.1.0.0
+synopsis: solr-query integration for riak
+description: |
+  solr-query integration for riak. This is intended to replace the usage of
+  searchRaw from Network.Riak.Search.
+author: Mitchell Rosen
+maintainer: Mitchell Rosen
+github: Sentenai/riak-solr
+license: BSD3
+category: Network
+copyright: 2016 Sentenai, Inc.
 
 ghc-options: -Wall
 
