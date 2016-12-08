@@ -11,16 +11,16 @@ module Network.Riak.Solr
   , module Solr.Query.Class
   ) where
 
-import Data.ByteString.Lazy                     (ByteString, fromStrict)
-import Data.Monoid                              (Endo(..))
+import Data.ByteString.Lazy (ByteString, fromStrict)
+import Data.Monoid (Endo(..))
 import Data.Semigroup
-import Data.Sequence                            ((|>))
-import Data.Text                                (Text)
-import Network.Riak.Connection                  (exchange)
+import Data.Sequence ((|>))
+import Data.Text (Text)
+import Network.Riak.Connection (exchange)
 import Network.Riak.Protocol.SearchQueryRequest (SearchQueryRequest)
-import Network.Riak.Types                       (Connection)
-import Network.Riak.Types.Internal              (Index, SearchResult)
-import Prelude                                  hiding (filter)
+import Network.Riak.Types (Connection)
+import Network.Riak.Types.Internal (Index, SearchResult)
+import Prelude.Compat
 import Solr.Param
 import Solr.LocalParam
 import Solr.LocalParam.Internal

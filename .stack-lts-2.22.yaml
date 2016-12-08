@@ -12,6 +12,7 @@ packages:
     extra-dep: true
 
 extra-deps:
+  - base-compat-0.9.1
   - protocol-buffers-2.4.0
   - protocol-buffers-descriptor-2.4.0
   - riak-protobuf-0.22.0.0

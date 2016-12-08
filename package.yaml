@@ -18,9 +18,11 @@ default-extensions:
   - LambdaCase
   - MultiParamTypeClasses
   - OverloadedStrings
+  - NoImplicitPrelude
 
 dependencies:
-  - base
+  - base        >= 4.7   && < 5
+  - base-compat >= 0.9.1
 
 library:
   source-dirs: src
@@ -30,8 +32,9 @@ library:
     - protocol-buffers
     - riak
     - riak-protobuf
+    - semigroups >= 0.3 && < 0.19
     - solr-query
-    - text
+    - text       >= 1.0 && < 1.3
 
 tests:
   spec:
