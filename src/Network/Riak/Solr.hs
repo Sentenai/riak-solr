@@ -3,27 +3,27 @@ module Network.Riak.Solr
     search
     -- * Re-exports
   , Query
+  , FilterQuery
   , Expr
-  , Param
-  , paramDefaultField
-  , paramOpAnd
-  , paramOpOr
-  , paramRows
-  , paramStart
-  , module Solr.Query.Class
   , module Solr.Expr.Class
+  , module Solr.LocalParam
+  , module Solr.Param
+  , module Solr.Query.Class
   ) where
 
 import Data.ByteString.Lazy                     (ByteString, fromStrict)
 import Data.Monoid                              (Endo(..))
 import Data.Semigroup
+import Data.Sequence                            ((|>))
 import Data.Text                                (Text)
 import Network.Riak.Connection                  (exchange)
 import Network.Riak.Protocol.SearchQueryRequest (SearchQueryRequest)
 import Network.Riak.Types                       (Connection)
 import Network.Riak.Types.Internal              (Index, SearchResult)
 import Prelude                                  hiding (filter)
-import Solr.Param.Internal
+import Solr.Param
+import Solr.LocalParam
+import Solr.LocalParam.Internal
 import Solr.Expr.Class
 import Solr.Query
 import Solr.Query.Class
@@ -36,33 +36,41 @@ import qualified Network.Riak.Response as Resp (search)
 import qualified Text.ProtocolBuffers as Proto
 
 search
-  :: Connection -> Index -> [Param Query] -> Query Expr
+  :: Connection -> Index -> [Param] -> [LocalParam Query] -> Query Expr
   -> IO SearchResult
-search conn index params query = Resp.search <$> exchange conn request
+search conn index params locals query = Resp.search <$> exchange conn request
   where
     request :: SearchQueryRequest
-    request = appEndo (foldMap step params)
+    request = appEndo (foldMap f params <> foldMap g locals)
       (Proto.defaultValue
-        { Req.q = lt2lbs (compile [] query)
+        { Req.q = lt2lbs (compile [] [] query)
         , Req.index = index
         })
       where
-        step :: Param Query -> Endo SearchQueryRequest
-        step = \case
-          ParamDefaultField s -> Endo (setDefaultField s)
-          ParamOpAnd          -> Endo (setOp "AND")
-          ParamOpOr           -> Endo (setOp "OR")
-          ParamRows         n -> Endo (setRows n)
-          ParamStart        n -> Endo (setStart n)
+        f :: Param -> Endo SearchQueryRequest
+        f = \case
+          ParamFl s    -> Endo (appendFl s)
+          ParamFq _ _  -> mempty -- I don't believe riak supports filter queries
+          ParamRows n  -> Endo (setRows n)
+          ParamStart n -> Endo (setStart n)
+
+        g :: LocalParam Query -> Endo SearchQueryRequest
+        g = \case
+          LocalParamDf s  -> Endo (setDf s)
+          LocalParamOpAnd -> Endo (setOp "AND")
+          LocalParamOpOr  -> Endo (setOp "OR")
 
           -- These correspond to the instances that Query is missing, so it
           -- isn't likely that we end up here (orphan instances...); just return
           -- mempty anyway.
-          ParamCache _ -> mempty
-          ParamCost  _ -> mempty
+          LocalParamCache _ -> mempty
+          LocalParamCost  _ -> mempty
 
-setDefaultField :: Text -> SearchQueryRequest -> SearchQueryRequest
-setDefaultField s q = q { Req.df = Just (t2lbs s) }
+setDf :: Text -> SearchQueryRequest -> SearchQueryRequest
+setDf s q = q { Req.df = Just (t2lbs s) }
+
+appendFl :: Text -> SearchQueryRequest -> SearchQueryRequest
+appendFl s q = q { Req.fl = Req.fl q |> t2lbs s }
 
 setOp :: ByteString -> SearchQueryRequest -> SearchQueryRequest
 setOp o q = q { Req.op = Just o }
