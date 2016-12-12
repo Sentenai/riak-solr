@@ -14,11 +14,14 @@ copyright: 2016 Sentenai, Inc.
 ghc-options: -Wall
 
 default-extensions:
+  - DataKinds
+  - GADTs
   - InstanceSigs
   - LambdaCase
   - MultiParamTypeClasses
   - OverloadedStrings
   - NoImplicitPrelude
+  - RankNTypes
 
 dependencies:
   - base        >= 4.7   && < 5

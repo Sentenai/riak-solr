@@ -4,7 +4,7 @@ packages:
   - .
   - location:
       git: https://github.com/Sentenai/solr-query.git
-      commit: 'c9d60b0'
+      commit: '099aa47'
     extra-dep: true
   - location:
       git: https://github.com/mitchellwrosen/riak-haskell-client

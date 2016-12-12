@@ -25,7 +25,7 @@ source-repository head
 library
   hs-source-dirs:
       src
-  default-extensions: InstanceSigs LambdaCase MultiParamTypeClasses OverloadedStrings NoImplicitPrelude
+  default-extensions: DataKinds GADTs InstanceSigs LambdaCase MultiParamTypeClasses OverloadedStrings NoImplicitPrelude RankNTypes
   ghc-options: -Wall
   build-depends:
       base        >= 4.7   && < 5
@@ -47,7 +47,7 @@ test-suite spec
   main-is: Spec.hs
   hs-source-dirs:
       test
-  default-extensions: InstanceSigs LambdaCase MultiParamTypeClasses OverloadedStrings NoImplicitPrelude
+  default-extensions: DataKinds GADTs InstanceSigs LambdaCase MultiParamTypeClasses OverloadedStrings NoImplicitPrelude RankNTypes
   ghc-options: -Wall
   build-depends:
       base        >= 4.7   && < 5
