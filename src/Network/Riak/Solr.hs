@@ -20,12 +20,11 @@ import Solr.Query.Initial
 
 import qualified Data.Text.Encoding as Text (encodeUtf8)
 import qualified Data.Text.Lazy as LText (Text)
+import qualified Data.Text.Lazy.Builder as Builder (toLazyText)
 import qualified Data.Text.Lazy.Encoding as LText (encodeUtf8)
 import qualified Network.Riak.Protocol.SearchQueryRequest as Req
 import qualified Network.Riak.Response as Resp (search)
 import qualified Text.ProtocolBuffers as Proto
-
-import qualified Data.ByteString.Lazy as LBS
 
 search
   :: Connection -> Index -> [Param] -> [LocalParam 'QueryLocalParam] -> Query
@@ -35,13 +34,13 @@ search conn index params locals query = Resp.search <$> exchange conn request
     request :: SearchQueryRequest
     request = appEndo (foldMap f params <> foldMap g locals)
       (Proto.defaultValue
-        { Req.q = LBS.drop 2 $ lt2lbs (compile [] [] query) -- drop 2 removes leading q= from string
+        { Req.q = lt2lbs (Builder.toLazyText (compileQuery query))
         , Req.index = index
         })
       where
         f :: Param -> Endo SearchQueryRequest
         f = \case
-          ParamFl s       -> mempty -- Fl is just problematic right now
+          ParamFl s       -> Endo (appendFl s)
           ParamFq _ _     -> mempty -- I don't believe riak supports filter queries
           ParamRows n     -> Endo (setRows n)
           ParamSortAsc s  -> Endo (setSort (s <> " asc"))

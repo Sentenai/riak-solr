@@ -4,11 +4,11 @@ packages:
   - .
   - location:
       git: https://github.com/Sentenai/solr-query.git
-      commit: '099aa47'
+      commit: '3fbe94b'
     extra-dep: true
   - location:
       git: https://github.com/mitchellwrosen/riak-haskell-client
-      commit: '17a68fb'
+      commit: '3fa54e1'
     extra-dep: true
 
 extra-deps:
