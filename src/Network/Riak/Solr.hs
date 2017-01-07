@@ -25,6 +25,8 @@ import qualified Network.Riak.Protocol.SearchQueryRequest as Req
 import qualified Network.Riak.Response as Resp (search)
 import qualified Text.ProtocolBuffers as Proto
 
+import qualified Data.ByteString.Lazy as LBS
+
 search
   :: Connection -> Index -> [Param] -> [LocalParam 'QueryLocalParam] -> Query
   -> IO SearchResult
@@ -33,13 +35,13 @@ search conn index params locals query = Resp.search <$> exchange conn request
     request :: SearchQueryRequest
     request = appEndo (foldMap f params <> foldMap g locals)
       (Proto.defaultValue
-        { Req.q = lt2lbs (compile [] [] query)
+        { Req.q = LBS.drop 2 $ lt2lbs (compile [] [] query) -- drop 2 removes leading q= from string
         , Req.index = index
         })
       where
         f :: Param -> Endo SearchQueryRequest
         f = \case
-          ParamFl s       -> Endo (appendFl s)
+          ParamFl s       -> mempty -- Fl is just problematic right now
           ParamFq _ _     -> mempty -- I don't believe riak supports filter queries
           ParamRows n     -> Endo (setRows n)
           ParamSortAsc s  -> Endo (setSort (s <> " asc"))
