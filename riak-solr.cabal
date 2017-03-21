@@ -1,9 +1,9 @@
--- This file has been generated from package.yaml by hpack version 0.14.1.
+-- This file has been generated from package.yaml by hpack version 0.17.0.
 --
 -- see: https://github.com/sol/hpack
 
 name:           riak-solr
-version:        0.1.0.0
+version:        0.2.0
 synopsis:       solr-query integration for riak
 description:    solr-query integration for riak. This is intended to replace the usage of
                 searchRaw from Network.Riak.Search.
@@ -25,10 +25,10 @@ source-repository head
 library
   hs-source-dirs:
       src
-  default-extensions: DataKinds GADTs InstanceSigs LambdaCase MultiParamTypeClasses OverloadedStrings NoImplicitPrelude RankNTypes
+  default-extensions: LambdaCase NamedFieldPuns OverloadedStrings NoImplicitPrelude
   ghc-options: -Wall
   build-depends:
-      base        >= 4.7   && < 5
+      base >= 4.7 && < 5
     , base-compat >= 0.9.1
     , bytestring
     , containers
@@ -37,7 +37,7 @@ library
     , riak-protobuf
     , semigroups >= 0.3 && < 0.19
     , solr-query
-    , text       >= 1.0 && < 1.3
+    , text >= 1.0 && < 1.3
   exposed-modules:
       Network.Riak.Solr
   default-language: Haskell2010
@@ -47,10 +47,10 @@ test-suite spec
   main-is: Spec.hs
   hs-source-dirs:
       test
-  default-extensions: DataKinds GADTs InstanceSigs LambdaCase MultiParamTypeClasses OverloadedStrings NoImplicitPrelude RankNTypes
+  default-extensions: LambdaCase NamedFieldPuns OverloadedStrings NoImplicitPrelude
   ghc-options: -Wall
   build-depends:
-      base        >= 4.7   && < 5
+      base >= 4.7 && < 5
     , base-compat >= 0.9.1
     , riak-solr
     , hspec
