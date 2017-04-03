@@ -65,10 +65,6 @@ search conn index params locals query = Resp.search <$> exchange conn request
               <$> paramQOp
             ])
 
-          -- LocalParamDf s  -> setDf s
-          -- LocalParamOpAnd -> setOp "AND"
-          -- LocalParamOpOr  -> setOp "OR"
-
 setDf :: Text -> SearchQueryRequest -> SearchQueryRequest
 setDf s q = q { Req.df = Just (t2lbs s) }
 
