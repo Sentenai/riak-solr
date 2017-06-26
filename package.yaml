@@ -1,5 +1,5 @@
 name: riak-solr
-version: 0.2.0
+version: 0.2.1
 synopsis: solr-query integration for riak
 description: |
   solr-query integration for riak. This is intended to replace the usage of

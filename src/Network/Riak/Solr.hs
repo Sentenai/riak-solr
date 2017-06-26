@@ -1,6 +1,7 @@
 module Network.Riak.Solr
   ( -- * Search
     search
+  , searchRequest
     -- * Re-exports
   , module Solr.Query
   , module Solr.Query.Lucene
@@ -36,34 +37,39 @@ import qualified Solr.Query.Lucene.Internal as Solr
 search
   :: Connection -> Index -> [Solr.Param] -> Solr.LocalParams Solr.LuceneQuery
   -> Solr.LuceneQuery -> IO SearchResult
-search conn index params locals query = Resp.search <$> exchange conn request
-  where
-    request :: SearchQueryRequest
-    request = appEndo (foldMap (Endo . f) params <> g locals)
-      (Proto.defaultValue
-        { Req.q = b2lbs (Solr.coerceQuery query)
-        , Req.index = index
-        })
-      where
-        f :: Solr.Param -> SearchQueryRequest -> SearchQueryRequest
-        f = \case
-          Solr.ParamFl s       -> appendFl s
-          -- I don't believe riak supports filter queries
-          Solr.ParamFq _ _     -> id
-          Solr.ParamRows n     -> setRows n
-          Solr.ParamSortAsc s  -> setSort (s <> " asc")
-          Solr.ParamSortDesc s -> setSort (s <> " desc")
-          Solr.ParamStart n    -> setStart n
+search conn index params locals query =
+  Resp.search <$> exchange conn (searchRequest index params locals query)
 
-        g :: Solr.LocalParams Solr.LuceneQuery -> Endo SearchQueryRequest
-        g Solr.LuceneParams{Solr.paramDf, Solr.paramQOp} =
-          mconcat (catMaybes
-            [ (Endo . setDf) <$> paramDf
-            , (\case
-                Solr.QOpAnd -> Endo (setOp "AND")
-                Solr.QOpOr  -> Endo (setOp "OR"))
-              <$> paramQOp
-            ])
+searchRequest
+  :: Index -> [Solr.Param] -> Solr.LocalParams Solr.LuceneQuery
+  -> Solr.LuceneQuery -> SearchQueryRequest
+searchRequest index params locals query =
+  appEndo (foldMap (Endo . f) params <> g locals)
+    (Proto.defaultValue
+      { Req.q = b2lbs (Solr.coerceQuery query)
+      , Req.index = index
+      })
+  where
+    f :: Solr.Param -> SearchQueryRequest -> SearchQueryRequest
+    f = \case
+      Solr.ParamFl s       -> appendFl s
+      -- I don't believe riak supports filter queries
+      Solr.ParamFq _ _     -> id
+      Solr.ParamRows n     -> setRows n
+      Solr.ParamSortAsc s  -> setSort (s <> " asc")
+      Solr.ParamSortDesc s -> setSort (s <> " desc")
+      Solr.ParamStart n    -> setStart n
+
+    g :: Solr.LocalParams Solr.LuceneQuery -> Endo SearchQueryRequest
+    g Solr.LuceneParams{Solr.paramDf, Solr.paramQOp} =
+      mconcat (catMaybes
+        [ (Endo . setDf) <$> paramDf
+        , (\case
+            Solr.QOpAnd -> Endo (setOp "AND")
+            Solr.QOpOr  -> Endo (setOp "OR"))
+          <$> paramQOp
+        ])
+
 
 setDf :: Text -> SearchQueryRequest -> SearchQueryRequest
 setDf s q = q { Req.df = Just (t2lbs s) }
