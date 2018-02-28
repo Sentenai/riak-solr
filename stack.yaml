@@ -1,17 +1,4 @@
-resolver: lts-7.8
-
-packages:
-  - .
-  - location:
-      git: https://github.com/Sentenai/solr-query.git
-      commit: 'fbd44e2'
-    extra-dep: true
-  - location:
-      git: https://github.com/mitchellwrosen/riak-haskell-client
-      commit: '3fa54e1'
-    extra-dep: true
-
+resolver: lts-10.6
 extra-deps:
-  - protocol-buffers-2.4.0
-  - protocol-buffers-descriptor-2.4.0
-  - riak-protobuf-0.22.0.0
+  - git: https://github.com/Sentenai/solr-query.git
+    commit: '4fb5782'

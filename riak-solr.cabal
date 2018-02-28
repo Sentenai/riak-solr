@@ -1,6 +1,8 @@
--- This file has been generated from package.yaml by hpack version 0.17.0.
+-- This file has been generated from package.yaml by hpack version 0.20.0.
 --
 -- see: https://github.com/sol/hpack
+--
+-- hash: 6f1bd4c6181446f608393655ef4455e0307366b4c834efce2f62151309f61fe7
 
 name:           riak-solr
 version:        0.2.1
@@ -28,18 +30,20 @@ library
   default-extensions: LambdaCase NamedFieldPuns OverloadedStrings NoImplicitPrelude
   ghc-options: -Wall
   build-depends:
-      base >= 4.7 && < 5
-    , base-compat >= 0.9.1
+      base >=4.7 && <5
+    , base-compat >=0.9.1
     , bytestring
     , containers
     , protocol-buffers
     , riak
     , riak-protobuf
-    , semigroups >= 0.3 && < 0.19
+    , semigroups >=0.3 && <0.19
     , solr-query
-    , text >= 1.0 && < 1.3
+    , text >=1.0 && <1.3
   exposed-modules:
       Network.Riak.Solr
+  other-modules:
+      Paths_riak_solr
   default-language: Haskell2010
 
 test-suite spec
@@ -50,8 +54,10 @@ test-suite spec
   default-extensions: LambdaCase NamedFieldPuns OverloadedStrings NoImplicitPrelude
   ghc-options: -Wall
   build-depends:
-      base >= 4.7 && < 5
-    , base-compat >= 0.9.1
-    , riak-solr
+      base >=4.7 && <5
+    , base-compat >=0.9.1
     , hspec
+    , riak-solr
+  other-modules:
+      Paths_riak_solr
   default-language: Haskell2010
