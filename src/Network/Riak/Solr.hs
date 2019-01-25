@@ -8,6 +8,7 @@ module Network.Riak.Solr
   ) where
 
 import Data.ByteString.Lazy (ByteString, fromStrict)
+import Data.List (intersperse)
 import Data.Maybe (catMaybes)
 import Data.Monoid (Endo(..))
 import Data.Semigroup
@@ -56,8 +57,8 @@ searchRequest index params locals query =
       -- I don't believe riak supports filter queries
       Solr.ParamFq _ _     -> id
       Solr.ParamRows n     -> setRows n
-      Solr.ParamSortAsc s  -> setSort (s <> " asc")
-      Solr.ParamSortDesc s -> setSort (s <> " desc")
+      Solr.ParamSort []    -> id
+      Solr.ParamSort ss    -> setSort (toSortString ss)
       Solr.ParamStart n    -> setStart n
 
     g :: Solr.LocalParams Solr.LuceneQuery -> Endo SearchQueryRequest
@@ -70,6 +71,13 @@ searchRequest index params locals query =
           <$> paramQOp
         ])
 
+toSortString :: [(Text, SortWay)] -> Text
+toSortString =
+  mconcat . intersperse "," . map f
+  where
+    f :: (Text, SortWay) -> Text
+    f (s, Asc) = s <> " asc"
+    f (s, Desc) = s <> " desc"
 
 setDf :: Text -> SearchQueryRequest -> SearchQueryRequest
 setDf s q = q { Req.df = Just (t2lbs s) }
