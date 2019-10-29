@@ -4,8 +4,8 @@ synopsis: solr-query integration for riak
 description: |
   solr-query integration for riak. This is intended to replace the usage of
   searchRaw from Network.Riak.Search.
-author: Mitchell Rosen
-maintainer: Mitchell Rosen
+author: Sentenai, Mitchell Rosen
+maintainer: Sentenai
 github: Sentenai/riak-solr
 license: BSD3
 category: Network
