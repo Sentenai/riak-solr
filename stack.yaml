@@ -1,4 +1,4 @@
 resolver: lts-10.6
 extra-deps:
   - git: https://github.com/Sentenai/solr-query.git
-    commit: '2eeee6e'
+    commit: '55010ca2da45a05bacbf05f25156344162577c2c'
