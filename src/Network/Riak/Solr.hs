@@ -21,10 +21,10 @@ import Data.Text.Lazy.Builder (Builder)
 import qualified Data.Text.Lazy.Builder as Builder (toLazyText)
 import qualified Data.Text.Lazy.Encoding as LText (encodeUtf8)
 import Network.Riak.Connection (exchange)
-import Network.Riak.Lens
 import qualified Network.Riak.Response as Resp (search)
 import Network.Riak.Types.Internal hiding (MessageTag (..))
 import Prelude.Compat
+import RIO ((.~), (^.))
 import Solr.Query
 import qualified Solr.Query as Solr
 import qualified Solr.Query.Internal as Solr
