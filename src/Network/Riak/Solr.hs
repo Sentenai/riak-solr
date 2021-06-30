@@ -24,7 +24,8 @@ import Network.Riak.Connection (exchange)
 import qualified Network.Riak.Response as Resp (search)
 import Network.Riak.Types.Internal hiding (MessageTag (..))
 import Prelude.Compat
-import RIO ((.~), (^.))
+import RIO (trace, (.~), (^.))
+import RIO.Prelude (decodeUtf8Lenient)
 import Solr.Query
 import qualified Solr.Query as Solr
 import qualified Solr.Query.Internal as Solr
@@ -49,12 +50,13 @@ searchRequest ::
   Solr.LuceneQuery ->
   Proto.RpbSearchQueryReq
 searchRequest index params locals query =
-  appEndo
-    (foldMap (Endo . f) params <> g locals)
-    ( Proto.defMessage
-        & Proto.q .~ (toStrict $ b2lbs (Solr.coerceQuery query))
-        & Proto.index .~ index
-    )
+  trace (decodeUtf8Lenient (toStrict $ b2lbs (Solr.coerceQuery query))) $
+    appEndo
+      (foldMap (Endo . f) params <> g locals)
+      ( Proto.defMessage
+          & Proto.q .~ (toStrict $ b2lbs (Solr.coerceQuery query))
+          & Proto.index .~ index
+      )
   where
     f :: Solr.Param -> Proto.RpbSearchQueryReq -> Proto.RpbSearchQueryReq
     f = \case
