@@ -15,6 +15,7 @@ import Data.Maybe (catMaybes)
 import qualified Data.Riak.Proto as Proto
 import Data.Semigroup
 import Data.Text (Text)
+import qualified Data.Text as T
 import qualified Data.Text.Encoding as Text (encodeUtf8)
 import qualified Data.Text.Lazy as LText (Text)
 import Data.Text.Lazy.Builder (Builder)
@@ -50,13 +51,14 @@ searchRequest ::
   Solr.LuceneQuery ->
   Proto.RpbSearchQueryReq
 searchRequest index params locals query =
-  trace (decodeUtf8Lenient (toStrict $ b2lbs (Solr.coerceQuery query))) $
-    appEndo
-      (foldMap (Endo . f) params <> g locals)
-      ( Proto.defMessage
-          & Proto.q .~ (toStrict $ b2lbs (Solr.coerceQuery query))
-          & Proto.index .~ index
-      )
+  let test =
+        appEndo
+          (foldMap (Endo . f) params <> g locals)
+          ( Proto.defMessage
+              & Proto.q .~ (toStrict $ b2lbs (Solr.coerceQuery query))
+              & Proto.index .~ index
+          )
+   in trace (T.pack . show $ test) $ test
   where
     f :: Solr.Param -> Proto.RpbSearchQueryReq -> Proto.RpbSearchQueryReq
     f = \case
